@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% block content %}
+    {% for campaign in campaigns %}
+        <article class="media content-section">
+          <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + campaign.author.image_file) }}">
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="#">{{ campaign.author.username }}</a>
+              <small class="text-muted">{{ campaign.date_posted.strftime('%Y-%m-%d') }}</small>
+            </div>
+            <h2><a class="article-title" href="{{ url_for('campaign', campaign_id=campaign.id) }}">{{ campaign.title }}</a></h2>
+            <p class="article-content">{{ campaign.content }}</p>
+          </div>
+        </article>
+    {% endfor %}
+{% endblock content %}

@@ -1,4 +1,3 @@
-
 from datetime import datetime
 from app import db, login_manager
 from flask_login import UserMixin
@@ -28,7 +27,7 @@ class Campaign(db.Model):
     content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     amount = db.Column(db.Integer, nullable=False)
-    donations = db.relationship('Donation', backref='author', lazy=True)
+    donations = db.relationship('Donation', backref='campaign', lazy=True)
 
     def __repr__(self):
         return "Campaign('{title}', '{date_posted}')".format(title=self.title, date_posted=self.date_posted)
@@ -41,7 +40,7 @@ class Donation(db.Model):
     content = db.Column(db.Text, nullable=False)
     amount = db.Column(db.Integer, nullable=False)
     user_id = db.Column(db.Integer, nullable=False)
-    campaign_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    campaign_id = db.Column(db.Integer, db.ForeignKey('campaign.id'), nullable=False)
 
     def __repr__(self):
         return "Donation('{user_id}', '{amount}')".format(user_id=self.user_id, amount=self.amount)
