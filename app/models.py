@@ -18,7 +18,7 @@ class User(db.Model, UserMixin):
     posts = db.relationship('Post', backref='author', lazy=True)
 
     def __repr__(self):
-        return f"User('{self.username}', '{self.email}', '{self.image_file}')"
+        return "User('{username}', '{email}', '{image_file}')".format(username=self.username,email=self.email,image_file=self.image_file)
 
 
 class Post(db.Model):
@@ -29,4 +29,16 @@ class Post(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     def __repr__(self):
-return f"Post('{self.title}', '{self.date_posted}')"
+        return "Post('{title}', '{date_posted}')".format(title=self.title, date_posted=self.date_posted)
+
+
+class Donation(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    date_done = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    content = db.Column(db.Text, nullable=False)
+    amount = db.Column(db.Integer, nullable=False)
+    user_id = db.Column(db.Integer, nullable=False)
+
+    def __repr__(self):
+        return "Donation('{user_id}', '{amount}')".format(user_id=self.user_id, amount=self.amount)
