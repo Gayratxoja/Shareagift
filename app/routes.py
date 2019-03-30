@@ -3,7 +3,7 @@ import secrets
 from PIL import Image
 from flask import render_template, url_for, flash, redirect, request, abort
 from app import app, db, bcrypt
-from app.forms import RegistrationForm, LoginForm, UpdateAccountForm, PostForm
+from app.forms import RegistrationForm, LoginForm, UpdateAccountForm, CampaignForm, Donation
 from app.models import User, Campaign, Donation
 from flask_login import login_user, current_user, logout_user, login_required
 
@@ -92,53 +92,69 @@ def account():
                            image_file=image_file, form=form)
 
 
-@app.route("/post/new", methods=['GET', 'POST'])
+@app.route("/campaign/new", methods=['GET', 'POST'])
 @login_required
-def new_post():
-    form = PostForm()
+def new_campaign():
+    form = CampaignForm()
     if form.validate_on_submit():
-        campaign = Campaign(title=form.title.data, content=form.content.data, author=current_user)
+        campaign = Campaign(title=form.title.data, content=form.content.data,
+                            author=current_user, amount=form.amount.data)
         db.session.add(campaign)
         db.session.commit()
-        flash('Your post has been created!', 'success')
+        flash('Your campaign has been created!', 'success')
         return redirect(url_for('home'))
-    return render_template('create_post.html', title='New Campaign',
-                           form=form, legend='New Post')
+    return render_template('create_campaign.html', title='New Campaign',
+                           form=form, legend='New Campaign')
 
 
-@app.route("/post/<int:campaign_id>")
-def post(post_id):
-    campaign = Campaign.query.get_or_404(post_id)
-    return render_template('post.html', title=campaign.title, campaign=campaign)
+@app.route("/campaign/<int:campaign_id>")
+def campaign(campaign_id):
+    campaign = Campaign.query.get_or_404(campaign_id)
+    return render_template('campaign.html', title=campaign.title, campaign=campaign)
 
 
-@app.route("/post/<int:post_id>/update", methods=['GET', 'POST'])
+@app.route("/campaign/<int:campaign_id>/update", methods=['GET', 'POST'])
 @login_required
-def update_post(post_id):
-    campaign = Campaign.query.get_or_404(post_id)
+def update_campaign(campaign_id):
+    campaign = Campaign.query.get_or_404(campaign_id)
     if campaign.author != current_user:
         abort(403)
-    form = PostForm()
+    form = CampaignForm()
     if form.validate_on_submit():
         campaign.title = form.title.data
         campaign.content = form.content.data
         db.session.commit()
-        flash('Your post has been updated!', 'success')
-        return redirect(url_for('post', post_id=post.id))
+        flash('Your campaign has been updated!', 'success')
+        return redirect(url_for('campaign', campaign_id=campaign.id))
     elif request.method == 'GET':
         form.title.data = campaign.title
         form.content.data = campaign.content
-    return render_template('create_post.html', title='Update Post',
-                           form=form, legend='Update Post')
+    return render_template('create_campaign.html', title='Update Campaign',
+                           form=form, legend='Update Campaign')
 
 
-@app.route("/post/<int:campaign_id>/delete", methods=['POST'])
+@app.route("/campaign/<int:campaign_id>/delete", methods=['POST'])
 @login_required
-def delete_post(campaign_id):
+def delete_campaign(campaign_id):
     campaign = Campaign.query.get_or_404(campaign_id)
     if campaign.author != current_user:
         abort(403)
     db.session.delete(campaign)
     db.session.commit()
-    flash('Your post has been deleted!', 'success')
+    flash('Your campaign has been deleted!', 'success')
     return redirect(url_for('home'))
+
+
+@app.route("/campaign/<int:campaign_id>/donation", methods=['GET', 'POST'])
+@login_required
+def donation(campaign_id):
+    campaign = Campaign.query.get_or_404(campaign_id)
+    form = Donation()
+    donation = Donation(title=form.title, campaign=campaign, user_id=current_user, amount=int(form.amount.data))
+    db.session.add(donation)
+    db.session.commit()
+    flash('Your Donation has been added!', 'success')
+    return redirect(url_for('home'))
+
+
+
