@@ -3,7 +3,7 @@ import secrets
 from PIL import Image
 from flask import render_template, url_for, flash, redirect, request, abort
 from app import app, db, bcrypt
-from app.forms import RegistrationForm, LoginForm, UpdateAccountForm, CampaignForm, Donation
+from app.forms import RegistrationForm, LoginForm, UpdateAccountForm, CampaignForm, DonationForm
 from app.models import User, Campaign, Donation
 from flask_login import login_user, current_user, logout_user, login_required
 
@@ -101,10 +101,10 @@ def new_campaign():
                             author=current_user, amount=form.amount.data)
         db.session.add(campaign)
         db.session.commit()
-        flash('Your campaign has been created!', 'success')
+        flash('Your post has been created!', 'success')
         return redirect(url_for('home'))
     return render_template('create_campaign.html', title='New Campaign',
-                           form=form, legend='New Campaign')
+                           form=form, legend='New Post')
 
 
 @app.route("/campaign/<int:campaign_id>")
@@ -141,20 +141,20 @@ def delete_campaign(campaign_id):
         abort(403)
     db.session.delete(campaign)
     db.session.commit()
-    flash('Your campaign has been deleted!', 'success')
+    flash('Your Campaign has been deleted!', 'success')
     return redirect(url_for('home'))
 
 
 @app.route("/campaign/<int:campaign_id>/donation", methods=['GET', 'POST'])
 @login_required
 def donation(campaign_id):
-    campaign = Campaign.query.get_or_404(campaign_id)
-    form = Donation()
-    donation = Donation(title=form.title, campaign=campaign, user_id=current_user, amount=int(form.amount.data))
-    db.session.add(donation)
-    db.session.commit()
-    flash('Your Donation has been added!', 'success')
-    return redirect(url_for('home'))
-
-
-
+    form = DonationForm()
+    if form.validate_on_submit():
+        donation = Donation(title=form.title.data, campaign_id=campaign_id,
+                            author=current_user, amount=form.amount.data)
+        db.session.add(donation)
+        db.session.commit()
+        flash('Your Donation has been added!', 'success')
+        return redirect(url_for('home'))
+    return render_template('donation.html', title='New Donation',
+                           form=form, legend='New Donation')

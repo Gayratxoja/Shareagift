@@ -63,7 +63,7 @@ class CampaignForm(FlaskForm):
     submit = SubmitField('New campaign')
 
 
-class Donation(FlaskForm):
+class DonationForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     amount = IntegerField('Amount', validators=[DataRequired()])
     submit = SubmitField('Donate')
