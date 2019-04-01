@@ -10,6 +10,7 @@
             </div>
             <h2><a class="article-title" href="{{ url_for('campaign', campaign_id=campaign.id) }}">{{ campaign.title }}</a></h2>
             <p class="article-content">{{ campaign.content }}</p>
+            <p class="article-content">{{ campaign.amount }}</p>
           </div>
         </article>
     {% endfor %}

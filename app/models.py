@@ -12,7 +12,7 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
+    image_file = db.Column(db.String(20), nullable=False, default='default.png')
     password = db.Column(db.String(60), nullable=False)
     campaigns = db.relationship('Campaign', backref='author', lazy=True)
 
@@ -37,7 +37,6 @@ class Donation(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     date_done = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    content = db.Column(db.Text, nullable=False)
     amount = db.Column(db.Integer, nullable=False)
     user_id = db.Column(db.Integer, nullable=False)
     campaign_id = db.Column(db.Integer, db.ForeignKey('campaign.id'), nullable=False)

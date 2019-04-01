@@ -16,6 +16,17 @@
       </div>
       <h2 class="article-title">{{ campaign.title }}</h2>
       <p class="article-content">{{ campaign.content }}</p>
+      <p class="article-content">{{ campaign.amount }}</p>
+      <table style="width:100%">
+  <tr>
+    <th>Amount</th>
+    <th>Gathered</th>
+  </tr>
+  <tr>
+    <td>{{ campaign.amount }}</td>
+    <td>{{ campaign.donations | sum(attribute='amount') }}</td>
+  </tr>
+</table>
     </div>
   </article>
   <!-- Modal -->

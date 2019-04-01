@@ -149,9 +149,10 @@ def delete_campaign(campaign_id):
 @login_required
 def donation(campaign_id):
     form = DonationForm()
+    campaign = Campaign.query.get_or_404(campaign_id)
     if form.validate_on_submit():
-        donation = Donation(title=form.title.data, campaign_id=campaign_id,
-                            author=current_user, amount=form.amount.data)
+        donation = Donation(title=form.title.data, campaign=campaign, user_id=current_user.id,
+                            amount=form.amount.data)
         db.session.add(donation)
         db.session.commit()
         flash('Your Donation has been added!', 'success')
