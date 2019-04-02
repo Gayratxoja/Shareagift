@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
     {% for campaign in campaigns %}
-        {% if campaign.amount > campaign.donations | sum(attribute='amount')%}
+    {% if campaign.amount <= campaign.donations | sum(attribute='amount')%}
         <article class="media content-section">
           <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + campaign.author.image_file) }}">
           <div class="media-body">

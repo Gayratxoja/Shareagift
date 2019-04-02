@@ -40,6 +40,7 @@
                 <tr>
                   {% for donation in campaign.donations %}
                      <th>{{donation.user_id}}</th>
+                     <td>{{donation.title}}</td>
                      <td>{{donation.amount}}</td>
                 </tr>
                   {% endfor %}

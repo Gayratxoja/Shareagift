@@ -8,13 +8,15 @@ from app.models import User, Campaign, Donation
 from flask_login import login_user, current_user, logout_user, login_required
 
 
-@app.route("/")
+
 @app.route("/home")
+@login_required
 def home():
     campaigns = Campaign.query.all()
     return render_template('home.html', campaigns=campaigns)
 
 
+@app.route("/")
 @app.route("/about")
 def about():
     return render_template('about.html', title='About')
@@ -101,10 +103,10 @@ def new_campaign():
                             author=current_user, amount=form.amount.data)
         db.session.add(campaign)
         db.session.commit()
-        flash('Your post has been created!', 'success')
+        flash('Your campaign has been created!', 'success')
         return redirect(url_for('home'))
     return render_template('create_campaign.html', title='New Campaign',
-                           form=form, legend='New Post')
+                           form=form, legend='New Campaign')
 
 
 @app.route("/campaign/<int:campaign_id>")
@@ -162,3 +164,10 @@ def donation(campaign_id):
         return redirect(url_for('home'))
     return render_template('donation.html', title='New Donation',
                            form=form, legend='New Donation')
+
+
+@app.route("/done_campaigns")
+@login_required
+def done_campaigns():
+    campaigns = Campaign.query.all()
+    return render_template('done_campaigns.html', title='Done Campaigns', campaigns=campaigns)
