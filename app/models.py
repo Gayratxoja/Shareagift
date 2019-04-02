@@ -38,7 +38,7 @@ class Donation(db.Model):
     title = db.Column(db.String(100), nullable=False)
     date_done = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     amount = db.Column(db.Integer, nullable=False)
-    user_id = db.Column(db.Integer, nullable=False)
+    user_id = db.Column(db.String(100), nullable=False)
     campaign_id = db.Column(db.Integer, db.ForeignKey('campaign.id'), nullable=False)
 
     def __repr__(self):

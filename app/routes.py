@@ -139,6 +139,9 @@ def delete_campaign(campaign_id):
     campaign = Campaign.query.get_or_404(campaign_id)
     if campaign.author != current_user:
         abort(403)
+
+    for donation in campaign.donations:
+        db.session.delete(donation)
     db.session.delete(campaign)
     db.session.commit()
     flash('Your Campaign has been deleted!', 'success')
@@ -151,7 +154,7 @@ def donation(campaign_id):
     form = DonationForm()
     campaign = Campaign.query.get_or_404(campaign_id)
     if form.validate_on_submit():
-        donation = Donation(title=form.title.data, campaign=campaign, user_id=current_user.id,
+        donation = Donation(title=form.title.data, campaign=campaign, user_id=current_user.username,
                             amount=form.amount.data)
         db.session.add(donation)
         db.session.commit()

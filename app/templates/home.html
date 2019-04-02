@@ -10,7 +10,18 @@
             </div>
             <h2><a class="article-title" href="{{ url_for('campaign', campaign_id=campaign.id) }}">{{ campaign.title }}</a></h2>
             <p class="article-content">{{ campaign.content }}</p>
-            <p class="article-content">{{ campaign.amount }}</p>
+                      <table style="width:100%">
+               <tr>
+                   <th>Amount</th>
+                   <th>Gathered</th>
+                   <th>Left</th>
+               </tr>
+                <tr>
+                    <td>{{ campaign.amount }}</td>
+                    <td>{{ campaign.donations | sum(attribute='amount') }}</td>
+                    <td>{{ campaign.amount - campaign.donations | sum(attribute='amount') }}</td>
+                </tr>
+          </table>
           </div>
         </article>
     {% endfor %}

@@ -16,19 +16,40 @@
       </div>
       <h2 class="article-title">{{ campaign.title }}</h2>
       <p class="article-content">{{ campaign.content }}</p>
-      <p class="article-content">{{ campaign.amount }}</p>
-      <table style="width:100%">
-  <tr>
-    <th>Amount</th>
-    <th>Gathered</th>
-  </tr>
-  <tr>
-    <td>{{ campaign.amount }}</td>
-    <td>{{ campaign.donations | sum(attribute='amount') }}</td>
-  </tr>
-</table>
+          <table style="width:100%">
+               <tr>
+                   <th>Amount</th>
+                   <th>Gathered</th>
+                   <th>Left</th>
+               </tr>
+                <tr>
+                    <td>{{ campaign.amount }}</td>
+                    <td>{{ campaign.donations | sum(attribute='amount') }}</td>
+                    <td>{{ campaign.amount - campaign.donations | sum(attribute='amount') }}</td>
+                </tr>
+          </table>
     </div>
   </article>
+
+      <article class="media content-section">
+      <div class="media-body">
+
+          <div class article-metadata>
+             <h2 class="article-title">Donations</h2>
+             <table style="width:100%">
+                <tr>
+                  {% for donation in campaign.donations %}
+                     <th>{{donation.user_id}}</th>
+                     <td>{{donation.amount}}</td>
+                </tr>
+                  {% endfor %}
+             </table>
+          </div>
+      </div>
+
+      </article>
+
+
   <!-- Modal -->
   <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
